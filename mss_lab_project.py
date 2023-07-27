@@ -16,7 +16,7 @@ import pandas as pd
 locations_list = [('계양구',0), ('미추홀구',1), ('부평구', 2), ('용산구',3), ('마포구',4), ('서초구',5), ('송파구',6), ('유성구',7), ('서구',8), ('중구',9)]
 travel_time_list = [[0, 3, 2, 9, 8, 11, 11, 23, 25, 25], [3, 0, 2, 9, 8, 11, 11, 23, 25, 25], [2, 2, 0, 7, 6, 9, 9, 21, 23, 23], [9, 9, 7, 0, 1, 2, 2, 14, 16, 16], [8, 8, 6, 1, 0, 3, 3, 15, 17, 17], [11, 11, 9, 2, 3, 0, 3, 12, 14, 14], [11, 11, 9, 2, 3, 3, 0, 15, 17, 17], [23, 23, 21, 14, 15, 12, 15, 0, 2, 2], [25, 25, 23, 16, 17, 14, 17, 2, 0, 3], [25, 25, 23, 16, 17, 14, 17, 2, 3, 0]]
 
-#Generating Reservations
+#Generating Vehicles
 vehicles_quantity = 10
 vehicles = []
 for i in range(vehicles_quantity):
@@ -28,16 +28,13 @@ for i in range(vehicles_quantity):
   vehicle = Vehicle(index, dispatchings, initial_location, curr_location, capacity)
   vehicles.append(vehicle)
 
+
+#Generating Reservations
 reservation_index = 0
 booking_quantity = 5
 reservations = []
 block_num = 144
 refuse_probability = 0.5
-
-#Customer's refusal
-def refuse_with_probability(Reservation, probability):
-  if rd.random() < probability:
-    Reservation.refusal = True
 
 for i in range(booking_quantity):
   reservation_index += 1
@@ -56,20 +53,6 @@ print(new_reservation.start_time, new_reservation.end_time, new_reservation.star
 
 '''<h1> Generating Initial Schedule </h1>'''
 
-def overlaps(Reservation, new_Reservation):
-  #print(len(Vehicle.dispatchings))
-
-    #새로운 예약의 시작 시간이 비교 예약의 종료 시간보다 늦은 경우
-    if Reservation.end_time < new_Reservation.start_time:
-      if travel_time_list[Reservation.end_location[1]][new_Reservation.start_location[1]] < (new_Reservation.start_time - Reservation.end_time):      #거리 조건 만족 여부
-        return False
-      else: return True
-    #새로운 예약의 종료 시간이 비교 예약의 시작 시간보다 이른 경우
-    elif Reservation.start_time > new_Reservation.end_time:
-      if travel_time_list[new_Reservation.end_location[1]][Reservation.start_location[1]] < (Reservation.start_time - new_Reservation.end_time):      #거리 조건 만족 여부
-        return False
-      else: return True
-    else: return True
 
 #block list which includes reservation list
 startime_block = list(list(None for i in range(0, vehicles_quantity)) for i in range(0,block_num))
