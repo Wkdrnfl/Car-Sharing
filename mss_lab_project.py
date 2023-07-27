@@ -28,17 +28,6 @@ for i in range(vehicles_quantity):
   vehicle = Vehicle(index, dispatchings, initial_location, curr_location, capacity)
   vehicles.append(vehicle)
 
-#Generating Reservations
-class Reservation:
-  def __init__(self, start_time, end_time, start_location, end_location, index):
-        self.start_time = start_time
-        self.end_time = end_time
-        self.start_location = start_location
-        self.end_location = end_location
-        self.index = index
-        self.vehicle = 0
-        self.refusal = False
-
 reservation_index = 0
 booking_quantity = 5
 reservations = []
