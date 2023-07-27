@@ -1,12 +1,3 @@
-import numpy as np
-import random as rd
-import plotly.express as px
-import pandas as pd
-
-#Locations
-locations_list = [('계양구',0), ('미추홀구',1), ('부평구', 2), ('용산구',3), ('마포구',4), ('서초구',5), ('송파구',6), ('유성구',7), ('서구',8), ('중구',9)]
-travel_time_list = [[0, 3, 2, 9, 8, 11, 11, 23, 25, 25], [3, 0, 2, 9, 8, 11, 11, 23, 25, 25], [2, 2, 0, 7, 6, 9, 9, 21, 23, 23], [9, 9, 7, 0, 1, 2, 2, 14, 16, 16], [8, 8, 6, 1, 0, 3, 3, 15, 17, 17], [11, 11, 9, 2, 3, 0, 3, 12, 14, 14], [11, 11, 9, 2, 3, 3, 0, 15, 17, 17], [23, 23, 21, 14, 15, 12, 15, 0, 2, 2], [25, 25, 23, 16, 17, 14, 17, 2, 0, 3], [25, 25, 23, 16, 17, 14, 17, 2, 3, 0]]
-
 #Generating Vehicles
 class Vehicle:
     def __init__(self, index, dispatchings, initial_location, curr_location, capacity):
@@ -15,103 +6,6 @@ class Vehicle:
       self.initial_location = initial_location
       self.curr_location = curr_location
       self.capacity = capacity
-
-vehicles_quantity = 10
-vehicles = []
-for i in range(vehicles_quantity):
-  index = i+1
-  dispatchings = []
-  initial_location = rd.choice(locations_list)
-  curr_location = initial_location
-  capacity = np.random.choice([4, 8], p = [0.8, 0.2])
-  vehicle = Vehicle(index, dispatchings, initial_location, curr_location, capacity)
-  vehicles.append(vehicle)
-
-#Generating Reservations
-class Reservation:
-  def __init__(self, start_time, end_time, start_location, end_location, index):
-        self.start_time = start_time
-        self.end_time = end_time
-        self.start_location = start_location
-        self.end_location = end_location
-        self.index = index
-        self.vehicle = 0
-        self.refusal = False
-
-reservation_index = 0
-booking_quantity = 5
-reservations = []
-block_num = 144
-refuse_probability = 0.5
-
-#Customer's refusal
-def refuse_with_probability(Reservation, probability):
-  if rd.random() < probability:
-    Reservation.refusal = True
-
-for i in range(booking_quantity):
-  reservation_index += 1
-  start_location = rd.choice(locations_list)
-  end_location = rd.choice(locations_list)
-  end_time = 100000
-  while end_time > block_num:
-    travel_time = travel_time_list[start_location[1]][end_location[1]]
-    start_time = rd.randrange(0,block_num)
-    end_time = start_time + travel_time + round(abs(np.random.normal(4, 2)))
-  new_booking = Reservation(start_time, end_time, start_location, end_location, reservation_index)
-  refuse_with_probability(new_booking, refuse_probability)
-  reservations.append(new_booking)
-new_reservation = rd.choice(reservations)
-print(new_reservation.start_time, new_reservation.end_time, new_reservation.start_location[0], new_reservation.end_location[0])
-
-"""<h1> Generating Initial Schedule </h1>
-
-"""
-
-#check for 10th earliest reservations
-'''
-for i in range(10):
-  sorted_reservations = sorted(reservations, key=lambda reservation: reservation.start_time)
-  print(sorted_reservations[i].index, 'th reservation starts at', sorted_reservations[i].start_time, 'from', sorted_reservations[i].start_location)
-  print('and it arrives to', sorted_reservations[i].end_location, 'at', sorted_reservations[i].end_time)
-  print("Vehicle", i, "has", len(vehicles[i].dispatchings), "reservations.")
-  print()
-'''
-
-#A function checking whether the reservations overlaps *Reservation list should be sorted by the start time*
-'''This algorithm compares new reservation with car.
-def overlaps(Vehicle, Reservation):
-  #print(len(Vehicle.dispatchings))
-  if len(Vehicle.dispatchings) == 0:
-    return False
-  for i in range(len(Vehicle.booking)):
-    this_booking = Vehicle.booking[i]
-    if this_booking.end_time < Reservation.start_time:
-      if travel_time[index(this_booking.end_location)][index(Reservation.start_location)] < (Reservation.start_time - this_booking.end_time):
-        return False
-      else: return True
-    elif this_booking.start_time > Reservation.end_time:
-      if travel_time[index(Reservation.end_location)][index(this_booking.start_location)] < (this_booking.start_time - Reservation.end_time):
-        return False
-      else: return True
-    else: return True
-'''
-
-
-def overlaps(Reservation, new_Reservation):
-  #print(len(Vehicle.dispatchings))
-
-    #새로운 예약의 시작 시간이 비교 예약의 종료 시간보다 늦은 경우
-    if Reservation.end_time < new_Reservation.start_time:
-      if travel_time_list[Reservation.end_location[1]][new_Reservation.start_location[1]] < (new_Reservation.start_time - Reservation.end_time):      #거리 조건 만족 여부
-        return False
-      else: return True
-    #새로운 예약의 종료 시간이 비교 예약의 시작 시간보다 이른 경우
-    elif Reservation.start_time > new_Reservation.end_time:
-      if travel_time_list[new_Reservation.end_location[1]][Reservation.start_location[1]] < (Reservation.start_time - new_Reservation.end_time):      #거리 조건 만족 여부
-        return False
-      else: return True
-    else: return True
 
 def overlaps_vehicle(new_Reservation, Vehicle):
   #print(len(Vehicle.dispatchings))
@@ -151,15 +45,6 @@ def overlaps_vehicle(new_Reservation, Vehicle):
       else: return (True, 100000)
 
   return (True, 100000)
-
-'''
-def overlaps_vehicle(Reservation, Vehicle):
-  for i in range(len(Vehicle.dispatchings)):
-    if overlaps(Vehicle.dispatchings[i], Reservation) == False: continue
-    else: return True
-  return False
-'''
-
 
 #block list which includes reservation list
 startime_block = list(list(None for i in range(0, vehicles_quantity)) for i in range(0,block_num))
