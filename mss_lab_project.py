@@ -26,6 +26,7 @@ locations_list = [('계양구',0), ('미추홀구',1), ('부평구', 2), ('용�
 travel_time_list = [[0, 3, 2, 9, 8, 11, 11, 23, 25, 25], [3, 0, 2, 9, 8, 11, 11, 23, 25, 25], [2, 2, 0, 7, 6, 9, 9, 21, 23, 23], [9, 9, 7, 0, 1, 2, 2, 14, 16, 16], [8, 8, 6, 1, 0, 3, 3, 15, 17, 17], [11, 11, 9, 2, 3, 0, 3, 12, 14, 14], [11, 11, 9, 2, 3, 3, 0, 15, 17, 17], [23, 23, 21, 14, 15, 12, 15, 0, 2, 2], [25, 25, 23, 16, 17, 14, 17, 2, 0, 3], [25, 25, 23, 16, 17, 14, 17, 2, 3, 0]]
 
 #Generating Vehicles
+'''
 class Vehicle:
     def __init__(self, index, dispatchings, initial_location, curr_location, capacity):
       self.index = index
@@ -33,6 +34,7 @@ class Vehicle:
       self.initial_location = initial_location
       self.curr_location = curr_location
       self.capacity = capacity
+'''
 
 vehicles_quantity = 10
 vehicles = []
